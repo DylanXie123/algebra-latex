@@ -2,17 +2,11 @@
   "name": "algebra-latex",
   "version": "2.0.3",
   "scripts": {
-    "build": "rimraf ./build && babel src -d build --extensions '.ts'",
-    "start": "node .",
-    "prettify": "prettier **/*.js --write",
+    "build": "rimraf ./build && babel src -d build --extensions \".ts,.tsx\" --source-maps inline",
     "test": "jest --watch",
     "prepublish": "npm run build"
   },
   "description": "Parse Latex math to a regular math string or algebra.js",
-  "main": "./lib/index.js",
-  "bin": {
-    "algebra-latex": "lib/cli.js"
-  },
   "repository": "https://github.com/viktorstrate/algebra-latex.git",
   "author": "viktorstrate <viktorstrate@gmail.com>",
   "license": "MIT",

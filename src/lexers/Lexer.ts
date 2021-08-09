@@ -1,13 +1,20 @@
+export interface Token {
+  type: "EOF" | "bracket" | "operator" | "equal" | "underscore" | "keyword" | "variable" | "number",
+  open?: boolean,
+  value?: string | number,
+}
+
 /**
  * An abstract class shared between lexers
  */
 export default class Lexer {
-  text: any
+  text: string
   pos: number
   col: number
   line: number
   prev_col: number
   prev_line: number
+
   constructor(text) {
     this.text = text
     this.pos = 0
@@ -23,7 +30,7 @@ export default class Lexer {
     this.col += amount
   }
 
-  error(message) {
+  error(message: string) {
     let line = this.text.split('\n')[this.prev_line]
     let spacing = ''
 
@@ -41,15 +48,15 @@ export default class Lexer {
     return this.text.charAt(this.pos)
   }
 
-  eat(char) {
-    if (this.current_char() == char) {
+  eat(char: string) {
+    if (this.current_char() === char) {
       this.pos += 1
     } else {
       this.error(`Expected ${char} found ${this.current_char()}`)
     }
   }
 
-  number() {
+  number(): Token {
     let num = ''
     let separator = false
 

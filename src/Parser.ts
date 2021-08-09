@@ -1,6 +1,6 @@
-import LexerClass from './lexers/Lexer'
+// import LexerClass from './lexers/Lexer'
 import functions from './models/functions'
-import greekLetters from './models/greek-letters'
+// import greekLetters from './models/greek-letters'
 import { debug } from './logger'
 
 export default class ParserLatex {
@@ -10,6 +10,7 @@ export default class ParserLatex {
   current_token: any
   peek_token: any
   functions: any
+  
   constructor(latex, Lexer, options: any = {}) {
     // if (!(Lexer instanceof LexerClass)) {
     //   throw Error('Please parse a valid lexer as second argument')

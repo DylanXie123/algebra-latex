@@ -1,12 +1,12 @@
-import Lexer from './Lexer'
+import Lexer, { Token } from './Lexer'
 import functions from '../models/functions'
 
 export default class LatexLexer extends Lexer {
-  constructor(mathString) {
+  constructor(mathString: string) {
     super(mathString)
   }
 
-  next_token() {
+  next_token(): Token {
     this.prev_col = this.col
     this.prev_line = this.line
 
@@ -85,7 +85,7 @@ export default class LatexLexer extends Lexer {
   }
 
   // Token contains string of alphabetic characters
-  alphabetic() {
+  alphabetic(): Token {
     let token = ''
     while (
       this.current_char().match(/[a-zA-Z]/) &&

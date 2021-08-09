@@ -2,7 +2,7 @@ import MathLexer from '../../src/lexers/LexerMath'
 import assert from 'assert'
 
 describe('math lexer', () => {
-  let parse = string => {
+  let parse = (string: string) => {
     let lexer = new MathLexer(string)
 
     let result = []

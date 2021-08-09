@@ -1,12 +1,12 @@
-import Lexer from './Lexer'
+import Lexer, { Token } from './Lexer'
 import greekLetters from '../models/greek-letters'
 
 export default class LatexLexer extends Lexer {
-  constructor(latex) {
+  constructor(latex: string) {
     super(latex)
   }
 
-  next_token() {
+  next_token(): Token {
     this.prev_col = this.col
     this.prev_line = this.line
 
@@ -14,7 +14,7 @@ export default class LatexLexer extends Lexer {
       return { type: 'EOF' }
     }
 
-    if (this.current_char() == '\n') {
+    if (this.current_char() === '\n') {
       this.col = 0
       this.line++
     }
@@ -39,7 +39,7 @@ export default class LatexLexer extends Lexer {
       }
     }
 
-    if (this.current_char() == '\\') {
+    if (this.current_char() === '\\') {
       return this.keyword()
     }
 
@@ -51,67 +51,67 @@ export default class LatexLexer extends Lexer {
       return this.variable()
     }
 
-    if (this.current_char() == '{') {
+    if (this.current_char() === '{') {
       this.increment()
       return { type: 'bracket', open: true, value: '{' }
     }
 
-    if (this.current_char() == '}') {
+    if (this.current_char() === '}') {
       this.increment()
       return { type: 'bracket', open: false, value: '}' }
     }
 
-    if (this.current_char() == '(') {
+    if (this.current_char() === '(') {
       this.increment()
       return { type: 'bracket', open: true, value: '(' }
     }
 
-    if (this.current_char() == ')') {
+    if (this.current_char() === ')') {
       this.increment()
       return { type: 'bracket', open: false, value: ')' }
     }
 
-    if (this.current_char() == '[') {
+    if (this.current_char() === '[') {
       this.increment()
       return { type: 'bracket', open: true, value: '[' }
     }
 
-    if (this.current_char() == ']') {
+    if (this.current_char() === ']') {
       this.increment()
       return { type: 'bracket', open: false, value: ']' }
     }
 
-    if (this.current_char() == '+') {
+    if (this.current_char() === '+') {
       this.increment()
       return { type: 'operator', value: 'plus' }
     }
 
-    if (this.current_char() == '-') {
+    if (this.current_char() === '-') {
       this.increment()
       return { type: 'operator', value: 'minus' }
     }
 
-    if (this.current_char() == '*') {
+    if (this.current_char() === '*') {
       this.increment()
       return { type: 'operator', value: 'multiply' }
     }
 
-    if (this.current_char() == '/') {
+    if (this.current_char() === '/') {
       this.increment()
       return { type: 'operator', value: 'divide' }
     }
 
-    if (this.current_char() == '^') {
+    if (this.current_char() === '^') {
       this.increment()
       return { type: 'operator', value: 'exponent' }
     }
 
-    if (this.current_char() == '=') {
+    if (this.current_char() === '=') {
       this.increment()
       return { type: 'equal' }
     }
 
-    if (this.current_char() == '_') {
+    if (this.current_char() === '_') {
       this.increment()
       return { type: 'underscore' }
     }
@@ -119,20 +119,20 @@ export default class LatexLexer extends Lexer {
     this.error('Unknown symbol: ' + this.current_char())
   }
 
-  keyword() {
+  keyword(): Token {
     this.eat('\\')
 
     let variable = this.variable()
 
-    if (variable.value == 'cdot') {
+    if (variable.value === 'cdot') {
       return { type: 'operator', value: 'multiply' }
     }
 
-    if (variable.value == 'mod') {
+    if (variable.value === 'mod') {
       return { type: 'operator', value: 'modulus' }
     }
 
-    if (variable.value == 'left') {
+    if (variable.value === 'left') {
       let bracket = this.next_token()
 
       if (bracket.type != 'bracket' && bracket.open != true) {
@@ -142,7 +142,7 @@ export default class LatexLexer extends Lexer {
       return bracket
     }
 
-    if (variable.value == 'right') {
+    if (variable.value === 'right') {
       let bracket = this.next_token()
 
       if (bracket.type != 'bracket' && bracket.open != false) {
@@ -152,7 +152,7 @@ export default class LatexLexer extends Lexer {
       return bracket
     }
 
-    if (greekLetters.map(x => x.name).includes(variable.value.toLowerCase())) {
+    if (greekLetters.map(x => x.name).includes((variable.value as string).toLowerCase())) {
       return { type: 'variable', value: variable.value }
     }
 
@@ -162,7 +162,7 @@ export default class LatexLexer extends Lexer {
     }
   }
 
-  variable() {
+  variable(): Token {
     let token = ''
     while (
       this.current_char().match(/[a-zA-Z]/) &&

@@ -2,7 +2,7 @@ import LexerLatex from '../../src/lexers/LexerLatex'
 import assert from 'assert'
 
 describe('latex lexer', () => {
-  let parse = latex => {
+  let parse = (latex: string) => {
     let lexer = new LexerLatex(latex)
 
     let result = []
