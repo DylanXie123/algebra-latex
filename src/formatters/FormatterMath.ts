@@ -1,6 +1,8 @@
-import greekLetters from '../models/greek-letters'
+import * as greekLetters from '../models/greek-letters'
+import { debug } from '../logger'
 
-export default class LatexFormatter {
+export default class MathFormatter {
+  ast: any
   constructor(ast) {
     this.ast = ast
   }
@@ -41,10 +43,11 @@ export default class LatexFormatter {
         op = '-'
         break
       case 'multiply':
-        op = '\\cdot '
+        op = '*'
         break
       case 'divide':
-        return this.fragment(root)
+        op = '/'
+        break
       case 'modulus':
         op = '%'
         break
@@ -60,7 +63,7 @@ export default class LatexFormatter {
     const precedensOrder = [
       ['modulus'],
       ['exponent'],
-      ['multiply'],
+      ['multiply', 'divide'],
       ['plus', 'minus'],
     ]
 
@@ -76,23 +79,19 @@ export default class LatexFormatter {
     let lhsParen = shouldHaveParenthesis(root.lhs)
     let rhsParen = shouldHaveParenthesis(root.rhs)
 
-    lhs = lhsParen ? `\\left(${lhs}\\right)` : lhs
+    // Special case for division
+    rhsParen = rhsParen || (op == '/' && root.rhs.type == 'operator')
 
     if (root.operator == 'exponent') {
-      rhsParen = true
-      rhs = rhsParen ? `{${rhs}}` : rhs
-    } else {
-      rhs = rhsParen ? `\\left(${rhs}\\right)` : rhs
+      if (root.rhs.type == 'number' && root.rhs.value < 0) {
+        rhsParen = true
+      }
     }
 
-    return `${lhs}${op}${rhs}`
-  }
+    lhs = lhsParen ? `(${lhs})` : lhs
+    rhs = rhsParen ? `(${rhs})` : rhs
 
-  fragment(root) {
-    let lhs = this.format(root.lhs)
-    let rhs = this.format(root.rhs)
-
-    return `\\frac{${lhs}}{${rhs}}`
+    return lhs + op + rhs
   }
 
   number(root) {
@@ -100,16 +99,16 @@ export default class LatexFormatter {
   }
 
   function(root) {
-    if (root.value == 'sqrt') {
-      return `\\${root.value}{${this.format(root.content)}}`
-    }
-    return `\\${root.value}\\left(${this.format(root.content)}\\right)`
+    return `${root.value}(${this.format(root.content)})`
   }
 
   variable(root) {
-    if (greekLetters.map(l => l.name).includes(root.value.toLowerCase())) {
-      return `\\${root.value}`
+    let greekLetter = greekLetters.getSymbol(root.value)
+
+    if (greekLetter) {
+      return greekLetter
     }
+
     return `${root.value}`
   }
 
@@ -122,7 +121,7 @@ export default class LatexFormatter {
       return `${this.format(root.base)}_${this.format(root.subscript)}`
     }
 
-    return `${this.format(root.base)}_{${this.format(root.subscript)}}`
+    return `${this.format(root.base)}_(${this.format(root.subscript)})`
   }
 
   uni_operator(root) {

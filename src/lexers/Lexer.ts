@@ -2,6 +2,12 @@
  * An abstract class shared between lexers
  */
 export default class Lexer {
+  text: any
+  pos: number
+  col: number
+  line: number
+  prev_col: number
+  prev_line: number
   constructor(text) {
     this.text = text
     this.pos = 0
