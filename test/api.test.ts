@@ -1,8 +1,8 @@
 import assert from 'assert'
 
-import algebraJS from 'algebra.js'
-import algebrite from 'algebrite'
-import coffeequate from 'coffeequate'
+// import algebraJS from 'algebra.js'
+// import algebrite from 'algebrite'
+// import coffeequate from 'coffeequate'
 
 import AlgebraLatex from '../src/index'
 

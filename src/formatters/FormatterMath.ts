@@ -34,7 +34,7 @@ export default class MathFormatter {
   }
 
   operator(root: AST): string {
-    let op = root.operator
+    let op: string = root.operator
 
     switch (op) {
       case 'plus':

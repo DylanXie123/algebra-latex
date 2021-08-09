@@ -9,7 +9,7 @@ describe('formatter math', () => {
   }
 
   it('format a general latex example', () => {
-    const ast = {
+    const ast: AST = {
       type: 'operator',
       operator: 'multiply',
       lhs: {
@@ -42,7 +42,7 @@ describe('formatter math', () => {
   })
 
   it('format division', () => {
-    const ast = {
+    const ast: AST = {
       type: 'operator',
       operator: 'divide',
       lhs: {
@@ -67,7 +67,7 @@ describe('formatter math', () => {
   })
 
   describe('format parenthesis nesting', () => {
-    const ast = {
+    const ast: AST = {
       lhs: {
         type: 'number',
         value: 6,
@@ -109,7 +109,7 @@ describe('formatter math', () => {
 
   describe('exponents', () => {
     it('parse expression with exponents', () => {
-      const ast = {
+      const ast: AST = {
         type: 'operator',
         operator: 'minus',
         lhs: {
@@ -150,7 +150,7 @@ describe('formatter math', () => {
     })
 
     it('parse nested exponents', () => {
-      const ast = {
+      const ast: AST = {
         type: 'operator',
         operator: 'exponent',
         lhs: {
@@ -183,7 +183,7 @@ describe('formatter math', () => {
     })
 
     it('format exponents of negative numbers with curley braces', () => {
-      const ast = {
+      const ast: AST = {
         type: 'operator',
         operator: 'exponent',
         lhs: {
@@ -201,7 +201,7 @@ describe('formatter math', () => {
   })
 
   it('should format latex with spaces correctly', () => {
-    const parsedLatex = {
+    const parsedLatex: AST = {
       type: 'operator',
       operator: 'multiply',
       lhs: {
@@ -219,7 +219,7 @@ describe('formatter math', () => {
 
   describe('functions', () => {
     it('should format sqrt function', () => {
-      const parsedLatex = {
+      const parsedLatex: AST = {
         type: 'function',
         value: 'sqrt',
         content: {
@@ -234,7 +234,7 @@ describe('formatter math', () => {
 
   describe('equations', () => {
     it('should format simple equation with variables and numbers', () => {
-      const parsedLatex = {
+      const parsedLatex: AST = {
         type: 'equation',
         lhs: {
           type: 'variable',
@@ -276,7 +276,7 @@ describe('formatter math', () => {
 
   describe('greek letters', () => {
     it('should format lower case', () => {
-      const parsedLatex = {
+      const parsedLatex: AST = {
         type: 'operator',
         operator: 'multiply',
         lhs: {
@@ -293,7 +293,7 @@ describe('formatter math', () => {
     })
 
     it('should format upper case', () => {
-      const parsedLatex = {
+      const parsedLatex: AST = {
         type: 'operator',
         operator: 'multiply',
         lhs: {
@@ -311,7 +311,7 @@ describe('formatter math', () => {
   })
 
   it('format variables with subscripts', () => {
-    const parsedLatex = {
+    const parsedLatex: AST = {
       type: 'operator',
       operator: 'minus',
       lhs: {

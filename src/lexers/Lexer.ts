@@ -1,8 +1,4 @@
-export interface Token {
-  type: "EOF" | "bracket" | "operator" | "equal" | "underscore" | "keyword" | "variable" | "number" | "function",
-  open?: boolean,
-  value?: string | number,
-}
+import Token from "./Token"
 
 /**
  * An abstract class shared between lexers

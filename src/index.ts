@@ -1,8 +1,6 @@
 import Parser from './Parser'
 import MathFormatter from './formatters/FormatterMath'
 import LatexFormatter from './formatters/FormatterLatex'
-// import { debug } from './logger'
-// import * as greekLetters from './models/greek-letters'
 import LatexLexer from './lexers/LexerLatex'
 import MathLexer from './lexers/LexerMath'
 
@@ -11,8 +9,8 @@ import MathLexer from './lexers/LexerMath'
  */
 class AlgebraLatex {
   options: {}
-  input: any
-  parser!: Parser
+  input: string
+  parser: Parser
   /**
    * Create an AlgebraLatex object, to be converted
    * The latex paremeter was removed as of v2.0, use parseLatex()

@@ -1,5 +1,6 @@
-import Lexer, { Token } from './Lexer'
+import Lexer from './Lexer'
 import greekLetters from '../models/greek-letters'
+import Token from './Token'
 
 export default class LatexLexer extends Lexer {
   constructor(latex: string) {

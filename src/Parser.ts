@@ -1,26 +1,27 @@
 import functions from './models/functions'
 import { debug } from './logger'
-import Lexer, { Token } from './lexers/Lexer'
-import AST from './formatters/AST'
+import Lexer from './lexers/Lexer'
+import AST, { operatorType } from './formatters/AST'
+import Token from './lexers/Token'
 
 export default class ParserLatex {
   lexer: Lexer
   options: {}
-  ast: AST
-  current_token: Token
-  peek_token: Token
+  ast!: AST
+  current_token!: Token
+  peek_token!: Token
   functions: string[]
   
-  constructor(latex: string, Lexer, options: any = {}) {
+  constructor(latex: string, Lexer: any, options: any = {}) {
     // if (!(Lexer instanceof LexerClass)) {
     //   throw Error('Please parse a valid lexer as second argument')
     // }
 
     this.lexer = new Lexer(latex)
     this.options = options
-    this.ast = null
-    this.current_token = null
-    this.peek_token = null
+    // this.ast = null
+    // this.current_token = null
+    // this.peek_token = null
     this.functions = functions.concat(options?.functions || [])
   }
 
@@ -34,7 +35,7 @@ export default class ParserLatex {
   }
 
   next_token() {
-    if (this.peek_token != null) {
+    if (this.peek_token !== null) {
       this.current_token = this.peek_token
       this.peek_token = null
       debug('next token from peek', this.current_token)
@@ -345,7 +346,7 @@ export default class ParserLatex {
 
     return {
       type: 'operator',
-      operator: op.value as string,
+      operator: op.value as operatorType,
       lhs,
       rhs,
     }
@@ -529,7 +530,7 @@ export default class ParserLatex {
 
       return {
         type: 'uni-operator',
-        operator: prefix,
+        operator: prefix as operatorType,
         value,
       }
     }
