@@ -3,7 +3,7 @@ import LatexLexer from '../../src/lexers/LexerLatex'
 import assert from 'assert'
 
 describe('latex parser', () => {
-  let parser = (latex) => {
+  let parser = (latex: string) => {
     let lexerLatex = new Parser(latex, LatexLexer)
     return lexerLatex.parse()
   }

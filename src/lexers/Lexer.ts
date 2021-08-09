@@ -1,5 +1,5 @@
 export interface Token {
-  type: "EOF" | "bracket" | "operator" | "equal" | "underscore" | "keyword" | "variable" | "number",
+  type: "EOF" | "bracket" | "operator" | "equal" | "underscore" | "keyword" | "variable" | "number" | "function",
   open?: boolean,
   value?: string | number,
 }
@@ -7,7 +7,7 @@ export interface Token {
 /**
  * An abstract class shared between lexers
  */
-export default class Lexer {
+export default abstract class Lexer {
   text: string
   pos: number
   col: number
@@ -15,7 +15,7 @@ export default class Lexer {
   prev_col: number
   prev_line: number
 
-  constructor(text) {
+  constructor(text: string) {
     this.text = text
     this.pos = 0
 
@@ -83,4 +83,6 @@ export default class Lexer {
       value: result,
     }
   }
+
+  abstract next_token() : Token
 }
