@@ -95,31 +95,31 @@ export const letters = [
   },
 ]
 
-export function toUpperCase(x) {
+export function toUpperCase(x: string) {
   return x.charAt(0).toUpperCase() + x.slice(1)
 }
 
-export function isUpperCase(x) {
+export function isUpperCase(x: string) {
   return x.charAt(0).toUpperCase() === x.charAt(0)
 }
 
-export function getSymbol(name) {
-  let symbol = letters.find(x => x.name === name.toLowerCase())
+export function getSymbol(name: string) {
+  const symbol = letters.find(x => x.name === name.toLowerCase())
   if (typeof symbol === 'undefined') return null
-  symbol = symbol.symbol
-  if (isUpperCase(name)) symbol = toUpperCase(symbol)
-  return symbol
+  let symbolText = symbol.symbol
+  if (isUpperCase(name)) symbolText = toUpperCase(symbolText)
+  return symbolText
 }
 
-export function getName(symbol) {
-  let name = letters.find(x => x.symbol === symbol.toLowerCase())
+export function getName(symbol: string) {
+  const name = letters.find(x => x.symbol === symbol.toLowerCase())
   if (typeof name === 'undefined') return null
-  name = name.name
-  if (isUpperCase(symbol)) name = toUpperCase(name)
-  return name
+  let nameText = name.name
+  if (isUpperCase(symbol)) nameText = toUpperCase(nameText)
+  return nameText
 }
 
-export function convertSymbols(math) {
+export function convertSymbols(math: string) {
   debug('Converting math symbols ' + math)
   letters.forEach(letter => {
     math = math.split(letter.symbol).join(letter.name)

@@ -3,7 +3,7 @@
   "version": "2.0.3",
   "scripts": {
     "build": "rimraf ./build && babel src -d build --extensions \".ts,.tsx\" --source-maps inline",
-    "test": "jest --watch",
+    "test": "jest ./test --watch",
     "prepublish": "npm run build"
   },
   "description": "Parse Latex math to a regular math string or algebra.js",

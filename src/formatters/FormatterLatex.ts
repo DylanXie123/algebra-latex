@@ -1,12 +1,14 @@
 import greekLetters from '../models/greek-letters'
+import AST from './AST'
 
 export default class LatexFormatter {
-  ast: any
-  constructor(ast) {
+  ast: AST
+
+  constructor(ast: AST) {
     this.ast = ast
   }
 
-  format(root = this.ast) {
+  format(root = this.ast): string {
     if (root == null) {
       return ''
     }
@@ -31,7 +33,7 @@ export default class LatexFormatter {
     }
   }
 
-  operator(root) {
+  operator(root: AST): string {
     let op = root.operator
 
     switch (op) {
@@ -65,13 +67,13 @@ export default class LatexFormatter {
       ['plus', 'minus'],
     ]
 
-    const higherPrecedens = (a, b) => {
-      const depth = op => precedensOrder.findIndex(val => val.includes(op))
+    const higherPrecedens = (a: string, b: string) => {
+      const depth = (op: string) => precedensOrder.findIndex(val => val.includes(op))
 
       return depth(b) > depth(a)
     }
 
-    const shouldHaveParenthesis = child =>
+    const shouldHaveParenthesis = (child: AST) =>
       child.type == 'operator' && higherPrecedens(root.operator, child.operator)
 
     let lhsParen = shouldHaveParenthesis(root.lhs)
@@ -89,48 +91,48 @@ export default class LatexFormatter {
     return `${lhs}${op}${rhs}`
   }
 
-  fragment(root) {
+  fragment(root: AST): string {
     let lhs = this.format(root.lhs)
     let rhs = this.format(root.rhs)
 
     return `\\frac{${lhs}}{${rhs}}`
   }
 
-  number(root) {
+  number(root: AST): string {
     return `${root.value}`
   }
 
-  function(root) {
+  function(root: AST): string {
     if (root.value == 'sqrt') {
       return `\\${root.value}{${this.format(root.content)}}`
     }
     return `\\${root.value}\\left(${this.format(root.content)}\\right)`
   }
 
-  variable(root) {
-    if (greekLetters.map(l => l.name).includes(root.value.toLowerCase())) {
+  variable(root: AST): string {
+    if (greekLetters.map(l => l.name).includes((root.value as string).toLowerCase())) {
       return `\\${root.value}`
     }
     return `${root.value}`
   }
 
-  equation(root) {
+  equation(root: AST): string {
     return `${this.format(root.lhs)}=${this.format(root.rhs)}`
   }
 
-  subscript(root) {
-    if (root.subscript.type == 'variable' && root.subscript.value.length == 1) {
+  subscript(root: AST): string {
+    if (root.subscript.type == 'variable' && (root.subscript.value as string).length == 1) {
       return `${this.format(root.base)}_${this.format(root.subscript)}`
     }
 
     return `${this.format(root.base)}_{${this.format(root.subscript)}}`
   }
 
-  uni_operator(root) {
+  uni_operator(root: AST): string {
     if (root.operator == 'minus') {
-      return `-${this.format(root.value)}`
+      return `-${this.format(root.value as AST)}`
     }
 
-    return this.format(root.value)
+    return this.format(root.value as AST)
   }
 }

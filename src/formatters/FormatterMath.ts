@@ -1,13 +1,14 @@
 import * as greekLetters from '../models/greek-letters'
-import { debug } from '../logger'
+import AST from './AST'
 
 export default class MathFormatter {
-  ast: any
-  constructor(ast) {
+  ast: AST
+
+  constructor(ast: AST) {
     this.ast = ast
   }
 
-  format(root = this.ast) {
+  format(root = this.ast): string {
     if (root == null) {
       return ''
     }
@@ -32,7 +33,7 @@ export default class MathFormatter {
     }
   }
 
-  operator(root) {
+  operator(root: AST): string {
     let op = root.operator
 
     switch (op) {
@@ -94,16 +95,16 @@ export default class MathFormatter {
     return lhs + op + rhs
   }
 
-  number(root) {
+  number(root: AST): string {
     return `${root.value}`
   }
 
-  function(root) {
+  function(root: AST): string {
     return `${root.value}(${this.format(root.content)})`
   }
 
-  variable(root) {
-    let greekLetter = greekLetters.getSymbol(root.value)
+  variable(root: AST): string {
+    let greekLetter = greekLetters.getSymbol(root.value as string)
 
     if (greekLetter) {
       return greekLetter
@@ -112,23 +113,23 @@ export default class MathFormatter {
     return `${root.value}`
   }
 
-  equation(root) {
+  equation(root: AST): string {
     return `${this.format(root.lhs)}=${this.format(root.rhs)}`
   }
 
-  subscript(root) {
-    if (root.subscript.type == 'variable' && root.subscript.value.length == 1) {
+  subscript(root: AST): string {
+    if (root.subscript.type == 'variable' && (root.subscript.value as string).length == 1) {
       return `${this.format(root.base)}_${this.format(root.subscript)}`
     }
 
     return `${this.format(root.base)}_(${this.format(root.subscript)})`
   }
 
-  uni_operator(root) {
+  uni_operator(root: AST): string {
     if (root.operator == 'minus') {
-      return `-${this.format(root.value)}`
+      return `-${this.format(root.value as AST)}`
     }
 
-    return this.format(root.value)
+    return this.format(root.value as AST)
   }
 }
