@@ -5,8 +5,8 @@
     "build": "rm -rf ./lib && babel src -d lib",
     "start": "node .",
     "prettify": "prettier **/*.js --write",
-    "test": "mocha --require babel-core/register --require babel-polyfill --recursive",
-    "test:watch": "mocha --require babel-core/register --recursive --watch",
+    "test": "mocha --require @babel/register --recursive",
+    "test:watch": "mocha --require @babel/register --recursive --watch",
     "prepublish": "npm run build"
   },
   "description": "Parse Latex math to a regular math string or algebra.js",
@@ -18,13 +18,17 @@
   "author": "viktorstrate <viktorstrate@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/preset-env": "^7.15.0",
+    "@babel/preset-typescript": "^7.15.0",
+    "@babel/register": "^7.14.5",
     "algebra.js": "^0.2.6",
     "algebrite": "^1.3.1",
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
     "coffeequate": "^1.3.0",
     "eslint-plugin-import": "^2.22.1",
-    "mocha": "^8.2.0",
-    "prettier": "^2.1.2"
+    "mocha": "^9.0.3",
+    "prettier": "^2.1.2",
+    "typescript": "^4.3.5"
   }
 }
