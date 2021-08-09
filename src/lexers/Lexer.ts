@@ -1,4 +1,4 @@
-import Token from "./Token"
+import Token, { ValToken } from "./Token"
 
 /**
  * An abstract class shared between lexers
@@ -34,7 +34,7 @@ export default abstract class Lexer {
       spacing += ' '
     }
 
-    throw Error(
+    return Error(
       `Lexer error\n${line}\n${spacing}^\nError at line: ${this.prev_line +
         1} col: ${this.prev_col + 1}\n${message}`
     )
@@ -48,11 +48,11 @@ export default abstract class Lexer {
     if (this.current_char() === char) {
       this.pos += 1
     } else {
-      this.error(`Expected ${char} found ${this.current_char()}`)
+      throw this.error(`Expected ${char} found ${this.current_char()}`)
     }
   }
 
-  number(): Token {
+  number(): ValToken {
     let num = ''
     let separator = false
 
@@ -71,7 +71,7 @@ export default abstract class Lexer {
 
     let result = Number(num)
     if (isNaN(result)) {
-      this.error(`Could not parse number: '${num}'`)
+      throw this.error(`Could not parse number: '${num}'`)
     }
 
     return {

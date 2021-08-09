@@ -1,6 +1,6 @@
 import Lexer from './Lexer'
 import greekLetters from '../models/greek-letters'
-import Token from './Token'
+import Token, { ValToken } from './Token'
 
 export default class LatexLexer extends Lexer {
   constructor(latex: string) {
@@ -117,7 +117,7 @@ export default class LatexLexer extends Lexer {
       return { type: 'underscore' }
     }
 
-    this.error('Unknown symbol: ' + this.current_char())
+    throw this.error('Unknown symbol: ' + this.current_char())
   }
 
   keyword(): Token {
@@ -136,9 +136,9 @@ export default class LatexLexer extends Lexer {
     if (variable.value === 'left') {
       let bracket = this.next_token()
 
-      if (bracket.type != 'bracket' && bracket.open != true) {
-        this.error('Expected opening bracket found ' + JSON.stringify(bracket))
-      }
+      // if (bracket.type !== 'bracket' && bracket.open !== true) {
+      //   this.error('Expected opening bracket found ' + JSON.stringify(bracket))
+      // }
 
       return bracket
     }
@@ -146,9 +146,9 @@ export default class LatexLexer extends Lexer {
     if (variable.value === 'right') {
       let bracket = this.next_token()
 
-      if (bracket.type != 'bracket' && bracket.open != false) {
-        this.error('Expected closing bracket found ' + JSON.stringify(bracket))
-      }
+      // if (bracket.type !== 'bracket' && bracket.open !== false) {
+      //   this.error('Expected closing bracket found ' + JSON.stringify(bracket))
+      // }
 
       return bracket
     }
@@ -163,7 +163,7 @@ export default class LatexLexer extends Lexer {
     }
   }
 
-  variable(): Token {
+  variable(): ValToken {
     let token = ''
     while (
       this.current_char().match(/[a-zA-Z]/) &&

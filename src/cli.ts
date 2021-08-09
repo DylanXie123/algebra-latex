@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const AlgebraLatex = require('./index')
+import AlgebraLatex from './index'
 
 const args = process.argv
 
@@ -33,7 +33,7 @@ function main() {
   printHelp()
 }
 
-function printResult(algebraLatex) {
+function printResult(algebraLatex: AlgebraLatex) {
   console.log(`     latex: ${algebraLatex.toLatex()}`)
   console.log(`ascii math: ${algebraLatex.toMath()}`)
 }

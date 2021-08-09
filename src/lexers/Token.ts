@@ -1,7 +1,20 @@
-export type TokenType = "EOF" | "bracket" | "operator" | "equal" | "underscore" | "keyword" | "variable" | "number" | "function" | "equation" | "subscript" | "uni-operator";
+export type TokenType = Pick<NoValToken, "type"> | Pick<ValToken, "type"> | Pick<BracketToken, "type">;
 
-export default interface Token {
-  type: TokenType,
-  open?: boolean,
-  value?: string | number,
+export default Token
+
+export type Token = BracketToken | NoValToken | ValToken;
+
+export interface BracketToken {
+  type: "bracket",
+  open: boolean,
+  value: string,
+}
+
+export interface NoValToken {
+  type: "EOF" | "equal" | "underscore",
+}
+
+export interface ValToken {
+  type: "operator" | "keyword" | "variable" | "number";
+  value: string | number,
 }

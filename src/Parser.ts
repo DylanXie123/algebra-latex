@@ -1,7 +1,7 @@
 import functions from './models/functions'
 import { debug } from './logger'
 import Lexer from './lexers/Lexer'
-import AST, { operatorType } from './formatters/AST'
+import AST, { OperatorType } from './formatters/AST'
 import Token from './lexers/Token'
 
 export default class ParserLatex {
@@ -108,7 +108,7 @@ export default class ParserLatex {
       this.peek_token.type === 'number' ||
       this.peek_token.type === 'operator' ||
       this.peek_token.type === 'variable' ||
-      this.peek_token.type === 'function' ||
+      // this.peek_token.type === 'function' ||
       this.peek_token.type === 'keyword' ||
       this.peek_token.type === 'bracket'
     ) {
@@ -346,7 +346,7 @@ export default class ParserLatex {
 
     return {
       type: 'operator',
-      operator: op.value as operatorType,
+      operator: op.value as OperatorType,
       lhs,
       rhs,
     }
@@ -530,7 +530,7 @@ export default class ParserLatex {
 
       return {
         type: 'uni-operator',
-        operator: prefix as operatorType,
+        operator: prefix as OperatorType,
         value,
       }
     }

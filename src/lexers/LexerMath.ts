@@ -82,7 +82,7 @@ export default class LatexLexer extends Lexer {
       return { type: 'underscore' }
     }
 
-    this.error('Unknown symbol: ' + this.current_char())
+    throw this.error('Unknown symbol: ' + this.current_char())
   }
 
   // Token contains string of alphabetic characters

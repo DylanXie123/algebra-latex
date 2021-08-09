@@ -1,5 +1,5 @@
 import greekLetters from '../models/greek-letters'
-import AST from './AST'
+import AST, { EquationNode, FunctionNode, NumberNode, OperatorNode, OperatorType, SubscriptNode, UniOperNode, VariableNode } from './AST'
 
 export default class LatexFormatter {
   ast: AST
@@ -28,13 +28,13 @@ export default class LatexFormatter {
         return this.subscript(root)
       case 'uni-operator':
         return this.uni_operator(root)
-      default:
-        throw Error('Unexpected type: ' + root.type)
+      // default:
+      //   throw Error('Unexpected type: ' + root.type)
     }
   }
 
-  operator(root: AST): string {
-    let op = root.operator
+  operator(root: OperatorNode): string {
+    let op: string = root.operator
 
     switch (op) {
       case 'plus':
@@ -91,36 +91,36 @@ export default class LatexFormatter {
     return `${lhs}${op}${rhs}`
   }
 
-  fragment(root: AST): string {
+  fragment(root: OperatorNode): string {
     let lhs = this.format(root.lhs)
     let rhs = this.format(root.rhs)
 
     return `\\frac{${lhs}}{${rhs}}`
   }
 
-  number(root: AST): string {
+  number(root: NumberNode): string {
     return `${root.value}`
   }
 
-  function(root: AST): string {
+  function(root: FunctionNode): string {
     if (root.value == 'sqrt') {
       return `\\${root.value}{${this.format(root.content)}}`
     }
     return `\\${root.value}\\left(${this.format(root.content)}\\right)`
   }
 
-  variable(root: AST): string {
+  variable(root: VariableNode): string {
     if (greekLetters.map(l => l.name).includes((root.value as string).toLowerCase())) {
       return `\\${root.value}`
     }
     return `${root.value}`
   }
 
-  equation(root: AST): string {
+  equation(root: EquationNode): string {
     return `${this.format(root.lhs)}=${this.format(root.rhs)}`
   }
 
-  subscript(root: AST): string {
+  subscript(root: SubscriptNode): string {
     if (root.subscript.type == 'variable' && (root.subscript.value as string).length == 1) {
       return `${this.format(root.base)}_${this.format(root.subscript)}`
     }
@@ -128,7 +128,7 @@ export default class LatexFormatter {
     return `${this.format(root.base)}_{${this.format(root.subscript)}}`
   }
 
-  uni_operator(root: AST): string {
+  uni_operator(root: UniOperNode): string {
     if (root.operator == 'minus') {
       return `-${this.format(root.value as AST)}`
     }

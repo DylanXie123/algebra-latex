@@ -1,5 +1,5 @@
 import * as greekLetters from '../models/greek-letters'
-import AST from './AST'
+import AST, { EquationNode, FunctionNode, NumberNode, OperatorNode, OperatorType, SubscriptNode, UniOperNode, VariableNode } from './AST'
 
 export default class MathFormatter {
   ast: AST
@@ -28,12 +28,12 @@ export default class MathFormatter {
         return this.subscript(root)
       case 'uni-operator':
         return this.uni_operator(root)
-      default:
-        throw Error('Unexpected type: ' + root.type)
+      // default:
+      //   throw Error('Unexpected type: ' + root.type)
     }
   }
 
-  operator(root: AST): string {
+  operator(root: OperatorNode): string {
     let op: string = root.operator
 
     switch (op) {
@@ -68,23 +68,23 @@ export default class MathFormatter {
       ['plus', 'minus'],
     ]
 
-    const higherPrecedens = (a, b) => {
-      const depth = op => precedensOrder.findIndex(val => val.includes(op))
+    const higherPrecedens = (a: string, b: string) => {
+      const depth = (op: string) => precedensOrder.findIndex(val => val.includes(op))
 
       return depth(b) > depth(a)
     }
 
-    const shouldHaveParenthesis = child =>
-      child.type == 'operator' && higherPrecedens(root.operator, child.operator)
+    const shouldHaveParenthesis = (child: AST) =>
+      child.type == 'operator' && higherPrecedens(root.operator!, child.operator!)
 
-    let lhsParen = shouldHaveParenthesis(root.lhs)
-    let rhsParen = shouldHaveParenthesis(root.rhs)
+    let lhsParen = shouldHaveParenthesis(root.lhs!)
+    let rhsParen = shouldHaveParenthesis(root.rhs!)
 
     // Special case for division
-    rhsParen = rhsParen || (op == '/' && root.rhs.type == 'operator')
+    rhsParen = rhsParen || (op === '/' && root.rhs!.type === 'operator')
 
-    if (root.operator == 'exponent') {
-      if (root.rhs.type == 'number' && root.rhs.value < 0) {
+    if (root.operator === 'exponent') {
+      if (root.rhs!.type === 'number' && root.rhs!.value! < 0) {
         rhsParen = true
       }
     }
@@ -95,15 +95,15 @@ export default class MathFormatter {
     return lhs + op + rhs
   }
 
-  number(root: AST): string {
+  number(root: NumberNode): string {
     return `${root.value}`
   }
 
-  function(root: AST): string {
+  function(root: FunctionNode): string {
     return `${root.value}(${this.format(root.content)})`
   }
 
-  variable(root: AST): string {
+  variable(root: VariableNode): string {
     let greekLetter = greekLetters.getSymbol(root.value as string)
 
     if (greekLetter) {
@@ -113,20 +113,20 @@ export default class MathFormatter {
     return `${root.value}`
   }
 
-  equation(root: AST): string {
+  equation(root: EquationNode): string {
     return `${this.format(root.lhs)}=${this.format(root.rhs)}`
   }
 
-  subscript(root: AST): string {
-    if (root.subscript.type == 'variable' && (root.subscript.value as string).length == 1) {
+  subscript(root: SubscriptNode): string {
+    if (root.subscript.type === 'variable' && (root.subscript.value as string).length === 1) {
       return `${this.format(root.base)}_${this.format(root.subscript)}`
     }
 
     return `${this.format(root.base)}_(${this.format(root.subscript)})`
   }
 
-  uni_operator(root: AST): string {
-    if (root.operator == 'minus') {
+  uni_operator(root: UniOperNode): string {
+    if (root.operator === 'minus') {
       return `-${this.format(root.value as AST)}`
     }
 

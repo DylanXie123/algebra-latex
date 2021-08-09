@@ -199,7 +199,7 @@ describe('formatter latex', () => {
           value: 'sin',
           content: {
             type: 'number',
-            value: '90',
+            value: 90,
           },
         },
       }
