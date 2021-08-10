@@ -125,7 +125,7 @@ export default class LatexLexer extends Lexer {
 
     let variable = this.variable()
 
-    if (variable.value === 'cdot') {
+    if (variable.value === 'cdot' || variable.value === 'times') {
       return { type: 'operator', value: 'multiply' }
     }
 
