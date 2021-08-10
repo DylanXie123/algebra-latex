@@ -44,6 +44,9 @@ class AlgebraLatex {
   }
 
   getAst() {
+    if (!this.parser.ast) {
+      throw Error('Call parse first');
+    }
     return this.parser.ast
   }
 

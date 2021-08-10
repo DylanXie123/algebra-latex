@@ -136,9 +136,9 @@ export default class LatexLexer extends Lexer {
     if (variable.value === 'left') {
       let bracket = this.next_token()
 
-      // if (bracket.type !== 'bracket' && bracket.open !== true) {
-      //   this.error('Expected opening bracket found ' + JSON.stringify(bracket))
-      // }
+      if (bracket.type !== 'bracket' || bracket.open !== true) {
+        throw this.error('Expected opening bracket found ' + JSON.stringify(bracket))
+      }
 
       return bracket
     }
@@ -146,9 +146,9 @@ export default class LatexLexer extends Lexer {
     if (variable.value === 'right') {
       let bracket = this.next_token()
 
-      // if (bracket.type !== 'bracket' && bracket.open !== false) {
-      //   this.error('Expected closing bracket found ' + JSON.stringify(bracket))
-      // }
+      if (bracket.type !== 'bracket' || bracket.open !== false) {
+        throw this.error('Expected closing bracket found ' + JSON.stringify(bracket))
+      }
 
       return bracket
     }

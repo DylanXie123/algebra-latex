@@ -1,14 +1,14 @@
 import functions from './models/functions'
 import { debug } from './logger'
 import Lexer from './lexers/Lexer'
-import AST, { OperatorType } from './formatters/AST'
+import AST, { NumberNode, OperatorType, UniOperNode } from './formatters/AST'
 import Token, { BracketToken, ValToken } from './lexers/Token'
 
 export default class ParserLatex {
   lexer: Lexer
   options: {}
-  ast!: AST
-  current_token!: Token
+  ast: AST | null
+  current_token: Token | null
   peek_token: Token | null
   functions: string[]
 
@@ -19,8 +19,8 @@ export default class ParserLatex {
 
     this.lexer = new Lexer(latex)
     this.options = options
-    // this.ast = null
-    // this.current_token = null
+    this.ast = null
+    this.current_token = null
     this.peek_token = null
     this.functions = functions.concat(options?.functions || [])
   }
@@ -482,7 +482,6 @@ export default class ParserLatex {
 
     if ((this.peek_token as ValToken).type === 'number') {
       this.next_token()
-      // TODO: Need test
       return {
         type: "number",
         value: (this.current_token as ValToken).value as number,
@@ -512,17 +511,12 @@ export default class ParserLatex {
     )
   }
 
-  uni_operator(): AST {
+  uni_operator(): NumberNode | UniOperNode {
     this.eat('operator')
-    // TODO: Need test
-    let value = this.number();
-    let prefix: ("plus" | "minus") = "minus";
-    if (
-      (this.current_token as ValToken).value === 'plus' ||
-      (this.current_token as ValToken).value === 'minus'
-    ) {
-      prefix = (this.current_token as ValToken).value as ("plus" | "minus")
-      value = this.number()
+    if ((this.current_token as ValToken).value === 'plus' ||
+      (this.current_token as ValToken).value === 'minus') {
+      let prefix = (this.current_token as ValToken).value as ("plus" | "minus")
+      let value = this.number()
 
       if (value.type === 'number') {
         return {
@@ -531,11 +525,13 @@ export default class ParserLatex {
         }
       }
 
-    }
-    return {
-      type: 'uni-operator',
-      operator: prefix,
-      value,
+      return {
+        type: 'uni-operator',
+        operator: prefix,
+        value,
+      }
+    } else {
+      this.error('Unsupported uni-operator')
     }
   }
 }
