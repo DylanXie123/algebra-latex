@@ -21,8 +21,8 @@ describe('API tests', () => {
   })
 
   it('parse empty input', () => {
-    assert.throws(() => {new AlgebraLatex().parseLatex('').toMath()})
-    assert.throws(() => {new AlgebraLatex().parseMath('').toMath()})
+    assert.equal(new AlgebraLatex().parseLatex('').toMath(), '')
+    assert.equal(new AlgebraLatex().parseMath('').toLatex(), '')
   })
 
   it('should parse math expression', () => {

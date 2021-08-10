@@ -3,6 +3,7 @@ import MathFormatter from './formatters/FormatterMath'
 import LatexFormatter from './formatters/FormatterLatex'
 import LatexLexer from './lexers/LexerLatex'
 import MathLexer from './lexers/LexerMath'
+import AST from './formatters/AST'
 
 /**
  * A class for parsing latex math
@@ -44,10 +45,14 @@ class AlgebraLatex {
   }
 
   getAst() {
-    if (!this.parser.ast) {
-      throw Error('Call parse first');
+    switch (this.parser.ast) {
+      case null:
+        throw Error('Call parse first');
+      case '':
+        return '';
+      default:
+        return this.parser.ast;
     }
-    return this.parser.ast
   }
 
   /**
@@ -55,7 +60,11 @@ class AlgebraLatex {
    * @return string The serialized string
    */
   toMath() {
-    return new MathFormatter(this.getAst()).format()
+    if (this.getAst() === '') {
+      return ''
+    } else {
+      return new MathFormatter(this.getAst() as AST).format()
+    }
   }
 
   /**
@@ -63,7 +72,11 @@ class AlgebraLatex {
    * @return string The formatted latex string
    */
   toLatex() {
-    return new LatexFormatter(this.getAst()).format()
+    if (this.getAst() === '') {
+      return ''
+    } else {
+      return new LatexFormatter(this.getAst() as AST).format()
+    }
   }
 
   // /**

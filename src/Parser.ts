@@ -7,7 +7,13 @@ import Token, { BracketToken, ValToken } from './lexers/Token'
 export default class ParserLatex {
   lexer: Lexer
   options: {}
-  ast: AST | null
+
+  /**
+   * @return `null`: parser error
+   * @return '': empty input
+   * @return `AST`: normal
+   */
+  ast: AST | null | ''
   current_token: Token | null
   peek_token: Token | null
   functions: string[]
@@ -27,13 +33,23 @@ export default class ParserLatex {
 
   parse() {
     debug('\nLatex parser .parse()')
-    this.ast = this.equation()
+    if (this.lexer.text.length === 0) {
+      this.ast = '';
+      return '';
+    } else {
+      this.ast = this.equation()
 
-    this.eat('EOF')
+      this.eat('EOF')
 
-    return this.ast
+      return this.ast
+    }
   }
 
+  /**
+   * invoke this method to update `this.current_token`,
+   * update `this.current_token` means that method is ready to handle 
+   * current token
+   */
   next_token() {
     if (this.peek_token !== null) {
       this.current_token = this.peek_token
@@ -46,6 +62,12 @@ export default class ParserLatex {
     return this.current_token
   }
 
+  /**
+   * update `this.peek_token` if it's not null,
+   * method usually use `this.peek_token` to see if it can handle next token,
+   * if method can handle next token, it will invoke `this.next_token()` to 
+   * update current token and handle it
+   */
   peek() {
     if (this.peek_token === null) {
       this.peek_token = this.lexer.next_token()
@@ -69,6 +91,12 @@ export default class ParserLatex {
     )
   }
 
+
+  /**
+   * similar to `this.next_token()`, but it assert the type of
+   * next token
+   * @param  {string} token_type
+   */
   eat(token_type: string) {
     if (this.next_token().type !== token_type) {
       this.error(
@@ -79,7 +107,7 @@ export default class ParserLatex {
 
   equation(): AST {
     // equation : expr ( EQUAL expr )?
-    let lhs = this.expr() as AST
+    let lhs = this.expr()
 
     if (this.peek().type !== 'equal') {
       return lhs
@@ -87,7 +115,7 @@ export default class ParserLatex {
       this.next_token()
     }
 
-    let rhs = this.expr() as AST
+    let rhs = this.expr()
 
     return {
       type: 'equation',
@@ -96,7 +124,7 @@ export default class ParserLatex {
     }
   }
 
-  expr(): AST | null {
+  expr(): AST {
     // expr : operator
 
     debug('expr')
@@ -118,10 +146,10 @@ export default class ParserLatex {
     //   return null
     // }
 
-    if (this.peek_token!.type === 'EOF') {
-      this.next_token()
-      return null
-    }
+    // if (this.peek_token!.type === 'EOF') {
+    //   this.next_token()
+    //   return null
+    // }
 
     this.next_token()
     this.error(`Unexpected token: ${JSON.stringify(this.current_token)}`)
@@ -138,7 +166,8 @@ export default class ParserLatex {
       throw Error('Expected keyword found ' + JSON.stringify(this.peek_token))
     }
 
-    let kwd = (this.peek_token! as ValToken).value
+    /* this.peek_token.type === "keyword" */
+    let kwd = (this.peek_token as ValToken).value
     kwd = (kwd as string).toLowerCase()
 
     debug('keyword -', kwd)
@@ -183,7 +212,7 @@ export default class ParserLatex {
     }
 
     this.eat('bracket')
-    if ((this.current_token as ValToken).value !== '[') {
+    if ((this.current_token as BracketToken).value !== '[') {
       this.error(
         'Expected "[" bracket, found ' + JSON.stringify(this.current_token)
       )
@@ -192,7 +221,7 @@ export default class ParserLatex {
     let base = this.number()
 
     this.eat('bracket')
-    if ((this.current_token as ValToken).value !== ']') {
+    if ((this.current_token as BracketToken).value !== ']') {
       this.error(
         'Expected "]" bracket, found ' + JSON.stringify(this.current_token)
       )
@@ -281,7 +310,7 @@ export default class ParserLatex {
 
     debug('end group')
 
-    return content as AST
+    return content
   }
 
   operator(): AST {
@@ -480,7 +509,7 @@ export default class ParserLatex {
 
     this.peek()
 
-    if ((this.peek_token as ValToken).type === 'number') {
+    if (this.peek_token!.type === 'number') {
       this.next_token()
       return {
         type: "number",
@@ -488,19 +517,19 @@ export default class ParserLatex {
       }
     }
 
-    if ((this.peek_token as ValToken).type === 'operator') {
+    if (this.peek_token!.type === 'operator') {
       return this.uni_operator()
     }
 
-    if ((this.peek_token as ValToken).type === 'variable') {
+    if (this.peek_token!.type === 'variable') {
       return this.variable()
     }
 
-    if ((this.peek_token as ValToken).type === 'keyword') {
+    if (this.peek_token!.type === 'keyword') {
       return this.keyword()
     }
 
-    if ((this.peek_token as BracketToken).type === 'bracket') {
+    if (this.peek_token!.type === 'bracket') {
       return this.group()
     }
 
