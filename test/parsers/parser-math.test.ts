@@ -70,30 +70,30 @@ describe('math parser', () => {
     })
   })
 
-  it('parse expressions with exponents', () => {
-    const math = 'e^(-3*4)'
+  // it('parse expressions with exponents', () => {
+  //   const math = 'e^(-3*4)'
 
-    assert.deepStrictEqual(parser(math), {
-      type: 'operator',
-      operator: 'exponent',
-      lhs: {
-        type: 'variable',
-        value: 'e',
-      },
-      rhs: {
-        type: 'operator',
-        operator: 'multiply',
-        lhs: {
-          type: 'number',
-          value: -3,
-        },
-        rhs: {
-          type: 'number',
-          value: 4,
-        },
-      },
-    })
-  })
+  //   assert.deepStrictEqual(parser(math), {
+  //     type: 'operator',
+  //     operator: 'exponent',
+  //     lhs: {
+  //       type: 'variable',
+  //       value: 'e',
+  //     },
+  //     rhs: {
+  //       type: 'operator',
+  //       operator: 'multiply',
+  //       lhs: {
+  //         type: 'number',
+  //         value: -3,
+  //       },
+  //       rhs: {
+  //         type: 'number',
+  //         value: 4,
+  //       },
+  //     },
+  //   })
+  // })
 
   it('parse fractions without helper parenthesis', () => {
     const math = '1/2*3'

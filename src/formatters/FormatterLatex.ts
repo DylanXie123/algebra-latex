@@ -9,7 +9,7 @@ export default class LatexFormatter {
   }
 
   format(root = this.ast): string {
-    if (root == null) {
+    if (root === null) {
       return ''
     }
 
@@ -28,8 +28,8 @@ export default class LatexFormatter {
         return this.subscript(root)
       case 'uni-operator':
         return this.uni_operator(root)
-      // default:
-      //   throw Error('Unexpected type: ' + root.type)
+      default:
+        throw Error('Unexpected type: ' + root.type)
     }
   }
 
@@ -74,14 +74,14 @@ export default class LatexFormatter {
     }
 
     const shouldHaveParenthesis = (child: AST) =>
-      child.type == 'operator' && higherPrecedens(root.operator, child.operator)
+      child.type === 'operator' && higherPrecedens(root.operator, child.operator)
 
     let lhsParen = shouldHaveParenthesis(root.lhs)
     let rhsParen = shouldHaveParenthesis(root.rhs)
 
     lhs = lhsParen ? `\\left(${lhs}\\right)` : lhs
 
-    if (root.operator == 'exponent') {
+    if (root.operator === 'exponent') {
       rhsParen = true
       rhs = rhsParen ? `{${rhs}}` : rhs
     } else {
@@ -103,7 +103,7 @@ export default class LatexFormatter {
   }
 
   function(root: FunctionNode): string {
-    if (root.value == 'sqrt') {
+    if (root.value === 'sqrt') {
       return `\\${root.value}{${this.format(root.content)}}`
     }
     return `\\${root.value}\\left(${this.format(root.content)}\\right)`
@@ -121,7 +121,7 @@ export default class LatexFormatter {
   }
 
   subscript(root: SubscriptNode): string {
-    if (root.subscript.type == 'variable' && (root.subscript.value as string).length == 1) {
+    if (root.subscript.type === 'variable' && (root.subscript.value as string).length === 1) {
       return `${this.format(root.base)}_${this.format(root.subscript)}`
     }
 
@@ -129,7 +129,7 @@ export default class LatexFormatter {
   }
 
   uni_operator(root: UniOperNode): string {
-    if (root.operator == 'minus') {
+    if (root.operator === 'minus') {
       return `-${this.format(root.value as AST)}`
     }
 

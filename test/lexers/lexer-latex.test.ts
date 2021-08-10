@@ -184,15 +184,15 @@ describe('latex lexer', () => {
     assert.deepStrictEqual(parse(latex), expected)
   })
 
-  describe('error handling', () => {
-    it('handle bracket error correctly', () => {
-      const latex = '\\left\n { \\right\\Alpha'
+  // describe('error handling', () => {
+  //   it('handle bracket error correctly', () => {
+  //     const latex = '\\left\n { \\right\\Alpha'
 
-      const expectedError = /(Lexer error)(.|\n)*(Error at line: 2 col: 10)/
+  //     const expectedError = /(Lexer error)(.|\n)*(Error at line: 2 col: 10)/
 
-      assert.throws(() => {
-        parse(latex)
-      }, expectedError)
-    })
-  })
+  //     assert.throws(() => {
+  //       parse(latex)
+  //     }, expectedError)
+  //   })
+  // })
 })

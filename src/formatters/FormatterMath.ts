@@ -9,7 +9,7 @@ export default class MathFormatter {
   }
 
   format(root = this.ast): string {
-    if (root == null) {
+    if (root === null) {
       return ''
     }
 
@@ -28,8 +28,8 @@ export default class MathFormatter {
         return this.subscript(root)
       case 'uni-operator':
         return this.uni_operator(root)
-      // default:
-      //   throw Error('Unexpected type: ' + root.type)
+      default:
+        throw Error('Unexpected type: ' + root.type)
     }
   }
 
@@ -75,7 +75,7 @@ export default class MathFormatter {
     }
 
     const shouldHaveParenthesis = (child: AST) =>
-      child.type == 'operator' && higherPrecedens(root.operator!, child.operator!)
+      child.type === 'operator' && higherPrecedens(root.operator!, child.operator!)
 
     let lhsParen = shouldHaveParenthesis(root.lhs!)
     let rhsParen = shouldHaveParenthesis(root.rhs!)

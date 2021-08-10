@@ -35,11 +35,11 @@ export interface SubscriptNode {
 
 export interface UniOperNode {
   type: "uni-operator",
-  operator: "minus",
+  operator: "minus" | "plus",
   value: AST,
 }
 
-export type ValueNode = NumberNode | VariableNode;
+export type ValueNode = NumberNode | VariableNode | KeywordNode;
 
 export interface NumberNode {
   type: "number",
@@ -49,4 +49,11 @@ export interface NumberNode {
 export interface VariableNode {
   type: "variable",
   value: string,
+}
+
+// this interface may be incorrect
+// needed in Parser.keyword function
+export interface KeywordNode {
+  type: "keyword",
+  value: string | number,
 }

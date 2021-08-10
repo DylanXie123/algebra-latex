@@ -15,7 +15,7 @@ export default class LatexLexer extends Lexer {
       return { type: 'EOF' }
     }
 
-    if (this.current_char() == '\n') {
+    if (this.current_char() === '\n') {
       this.col = 0
       this.line++
     }
@@ -37,47 +37,47 @@ export default class LatexLexer extends Lexer {
       return this.alphabetic()
     }
 
-    if (this.current_char() == '(') {
+    if (this.current_char() === '(') {
       this.increment()
       return { type: 'bracket', open: true, value: '(' }
     }
 
-    if (this.current_char() == ')') {
+    if (this.current_char() === ')') {
       this.increment()
       return { type: 'bracket', open: false, value: ')' }
     }
 
-    if (this.current_char() == '+') {
+    if (this.current_char() === '+') {
       this.increment()
       return { type: 'operator', value: 'plus' }
     }
 
-    if (this.current_char() == '-') {
+    if (this.current_char() === '-') {
       this.increment()
       return { type: 'operator', value: 'minus' }
     }
 
-    if (this.current_char() == '*') {
+    if (this.current_char() === '*') {
       this.increment()
       return { type: 'operator', value: 'multiply' }
     }
 
-    if (this.current_char() == '/') {
+    if (this.current_char() === '/') {
       this.increment()
       return { type: 'operator', value: 'divide' }
     }
 
-    if (this.current_char() == '^') {
+    if (this.current_char() === '^') {
       this.increment()
       return { type: 'operator', value: 'exponent' }
     }
 
-    if (this.current_char() == '=') {
+    if (this.current_char() === '=') {
       this.increment()
       return { type: 'equal' }
     }
 
-    if (this.current_char() == '_') {
+    if (this.current_char() === '_') {
       this.increment()
       return { type: 'underscore' }
     }

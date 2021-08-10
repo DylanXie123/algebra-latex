@@ -7,8 +7,8 @@ const args = process.argv
 main()
 
 function main() {
-  if (args[2] == '-l' || args[2] == '--latex') {
-    if (args.length != 4) {
+  if (args[2] === '-l' || args[2] === '--latex') {
+    if (args.length !== 4) {
       return printHelp()
     }
 
@@ -18,8 +18,8 @@ function main() {
     return printResult(algebraLatex)
   }
 
-  if (args[2] == '-m' || args[2] == '--math') {
-    if (args.length != 4) {
+  if (args[2] === '-m' || args[2] === '--math') {
+    if (args.length !== 4) {
       return printHelp()
     }
 

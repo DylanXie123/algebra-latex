@@ -1,10 +1,12 @@
-let stackLevelRef = null
+import Token from "./lexers/Token"
 
-export const debug = (...msg) => {
+let stackLevelRef: number | null = null
+
+export const debug = (...msg: (string | Token)[]) => {
   if (typeof process === 'object') {
     if (process.env.TEX_DEBUG) {
-      let stackLevel = new Error().stack.split('\n').length
-      if (stackLevelRef == null) {
+      let stackLevel = new Error().stack!.split('\n').length
+      if (stackLevelRef === null) {
         stackLevelRef = stackLevel
       }
       stackLevel -= stackLevelRef

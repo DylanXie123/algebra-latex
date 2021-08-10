@@ -9,8 +9,8 @@ import MathLexer from './lexers/LexerMath'
  */
 class AlgebraLatex {
   options: {}
-  input: string
-  parser: Parser
+  input!: string
+  parser!: Parser
   /**
    * Create an AlgebraLatex object, to be converted
    * The latex paremeter was removed as of v2.0, use parseLatex()
