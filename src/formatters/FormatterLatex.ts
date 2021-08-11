@@ -1,5 +1,5 @@
 import greekLetters from '../models/greek-letters'
-import AST, { EquationNode, FunctionNode, NumberNode, OperatorNode, OperatorType, SubscriptNode, UniOperNode, VariableNode } from './AST'
+import AST, { EquationNode, FunctionNode, NumberNode, OperatorNode, SubscriptNode, UniOperNode, VariableNode } from './AST'
 
 export default class LatexFormatter {
   ast: AST

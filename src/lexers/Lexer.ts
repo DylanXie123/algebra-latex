@@ -56,7 +56,7 @@ export default abstract class Lexer {
     let num = ''
     let separator = false
 
-    while (this.current_char().match(/[0-9\.]/)) {
+    while (this.current_char().match(/[0-9.]/)) {
       if (this.current_char() === '.') {
         if (separator) {
           break
