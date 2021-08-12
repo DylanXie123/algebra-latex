@@ -29,7 +29,7 @@ export default class LatexFormatter {
       case 'uni-operator':
         return this.uni_operator(root)
       default:
-        throw Error('Unexpected type: ' + root.type)
+        throw Error('Unexpected type: ' + root)
     }
   }
 

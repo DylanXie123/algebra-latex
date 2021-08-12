@@ -185,10 +185,7 @@ export default class ParserLatex {
     }
 
     this.eat('keyword')
-    return {
-      type: 'keyword',
-      value: (this.current_token as ValToken).value,
-    }
+    this.error('Unknow keyword:' + (this.current_token as ValToken).value)
   }
 
   sqrt(): AST {
