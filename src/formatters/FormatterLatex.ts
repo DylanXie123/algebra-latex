@@ -1,14 +1,25 @@
-import greekLetters from '../models/greek-letters'
-import AST, { EquationNode, FunctionNode, NumberNode, OperatorNode, SubscriptNode, UniOperNode, VariableNode } from './AST'
+// import greekLetters from '../models/greek-letters'
+import AST, { EquationNode, FunctionNode, NumberNode, OperatorNode, UniOperNode, VariableNode } from './AST'
+import nerdamer, { Expression } from 'nerdamer'
 
 export default class LatexFormatter {
   ast: AST
+  private parser: any
+  private Symbol: any
 
   constructor(ast: AST) {
     this.ast = ast
+    this.parser = nerdamer.getCore().PARSER
+    this.Symbol = nerdamer.getCore().Symbol
   }
 
-  format(root = this.ast): string {
+  getExpression() {
+    const symbol = this.format();
+    const Expression = nerdamer.getCore().Expression;
+    return (new Expression(symbol) as Expression)
+  }
+
+  format(root = this.ast): any {
     if (root === null) {
       return ''
     }
@@ -25,7 +36,7 @@ export default class LatexFormatter {
       case 'equation':
         return this.equation(root)
       case 'subscript':
-        return this.subscript(root)
+        return this.subscript()
       case 'uni-operator':
         return this.uni_operator(root)
       default:
@@ -33,104 +44,129 @@ export default class LatexFormatter {
     }
   }
 
-  operator(root: OperatorNode): string {
-    let op: string = root.operator
+  operator(root: OperatorNode) {
+    // const op: string = root.operator
 
-    switch (op) {
+    const lhs = this.format(root.lhs)
+    const rhs = this.format(root.rhs)
+
+    switch (root.operator) {
       case 'plus':
-        op = '+'
-        break
+        return this.parser.add(lhs, rhs)
       case 'minus':
-        op = '-'
-        break
+        return this.parser.subtract(lhs, rhs)
       case 'multiply':
-        op = '\\cdot '
-        break
+        return this.parser.multiply(lhs, rhs)
       case 'divide':
-        return this.fragment(root)
+        return this.parser.divide(lhs, rhs)
       case 'modulus':
-        op = '%'
-        break
+        return this.parser.mod(lhs, rhs)
       case 'exponent':
-        op = '^'
-        break
+        return this.parser.pow(lhs, rhs)
       default:
+        throw Error('Unknow operator' + root.operator)
     }
 
-    let lhs = this.format(root.lhs)
-    let rhs = this.format(root.rhs)
+    // switch (op) {
+    //   case 'plus':
+    //     op = '+'
+    //     break
+    //   case 'minus':
+    //     op = '-'
+    //     break
+    //   case 'multiply':
+    //     op = '\\cdot '
+    //     break
+    //   case 'divide':
+    //     return this.fragment(root)
+    //   case 'modulus':
+    //     op = '%'
+    //     break
+    //   case 'exponent':
+    //     op = '^'
+    //     break
+    //   default:
+    // }
 
-    const precedensOrder = [
-      ['modulus'],
-      ['exponent'],
-      ['multiply'],
-      ['plus', 'minus'],
-    ]
+    // let lhs = this.format(root.lhs)
+    // let rhs = this.format(root.rhs)
 
-    const higherPrecedens = (a: string, b: string) => {
-      const depth = (op: string) => precedensOrder.findIndex(val => val.includes(op))
+    // const precedensOrder: OperatorType[][] = [
+    //   ['modulus'],
+    //   ['exponent'],
+    //   ['multiply'],
+    //   ['plus', 'minus'],
+    // ]
 
-      return depth(b) > depth(a)
-    }
+    // const higherPrecedens = (a: OperatorType, b: OperatorType) => {
+    //   const depth = (op: OperatorType) => precedensOrder.findIndex(val => val.includes(op))
 
-    const shouldHaveParenthesis = (child: AST) =>
-      child.type === 'operator' && higherPrecedens(root.operator, child.operator)
+    //   return depth(b) > depth(a)
+    // }
 
-    let lhsParen = shouldHaveParenthesis(root.lhs)
-    let rhsParen = shouldHaveParenthesis(root.rhs)
+    // const shouldHaveParenthesis = (child: AST) =>
+    //   child.type === 'operator' && higherPrecedens(root.operator, child.operator)
 
-    lhs = lhsParen ? `\\left(${lhs}\\right)` : lhs
+    // let lhsParen = shouldHaveParenthesis(root.lhs)
+    // let rhsParen = shouldHaveParenthesis(root.rhs)
 
-    if (root.operator === 'exponent') {
-      rhsParen = true
-      rhs = rhsParen ? `{${rhs}}` : rhs
-    } else {
-      rhs = rhsParen ? `\\left(${rhs}\\right)` : rhs
-    }
+    // lhs = lhsParen ? `\\left(${lhs}\\right)` : lhs
 
-    return `${lhs}${op}${rhs}`
+    // if (root.operator === 'exponent') {
+    //   rhsParen = true
+    //   rhs = rhsParen ? `{${rhs}}` : rhs
+    // } else {
+    //   rhs = rhsParen ? `\\left(${rhs}\\right)` : rhs
+    // }
+
+    // return `${lhs}${op}${rhs}`
   }
 
-  fragment(root: OperatorNode): string {
-    let lhs = this.format(root.lhs)
-    let rhs = this.format(root.rhs)
+  // fragment(root: OperatorNode) {
+  //   let lhs = this.format(root.lhs)
+  //   let rhs = this.format(root.rhs)
 
-    return `\\frac{${lhs}}{${rhs}}`
+  //   return `\\frac{${lhs}}{${rhs}}`
+  // }
+
+  number(root: NumberNode) {
+    return new this.Symbol(root.value)
   }
 
-  number(root: NumberNode): string {
-    return `${root.value}`
+  function(root: FunctionNode) {
+    // if (root.value === 'sqrt') {
+    //   return `\\${root.value}{${this.format(root.content)}}`
+    // }
+    // return `\\${root.value}\\left(${this.format(root.content)}\\right)`
+    return this.parser.callfunction(root.value, this.format(root.content))
   }
 
-  function(root: FunctionNode): string {
-    if (root.value === 'sqrt') {
-      return `\\${root.value}{${this.format(root.content)}}`
-    }
-    return `\\${root.value}\\left(${this.format(root.content)}\\right)`
+  variable(root: VariableNode) {
+    // if (greekLetters.map(l => l.name).includes((root.value as string).toLowerCase())) {
+    //   return `\\${root.value}`
+    // }
+    // return `${root.value}`
+    return this.Symbol(root.value)
   }
 
-  variable(root: VariableNode): string {
-    if (greekLetters.map(l => l.name).includes((root.value as string).toLowerCase())) {
-      return `\\${root.value}`
-    }
-    return `${root.value}`
+  equation(root: EquationNode) {
+    // return `${this.format(root.lhs)}=${this.format(root.rhs)}`
+    return this.parser.equals(this.format(root.lhs), this.format(root.rhs))
   }
 
-  equation(root: EquationNode): string {
-    return `${this.format(root.lhs)}=${this.format(root.rhs)}`
+  subscript(): never {
+    throw Error('subscript not implemented')
+    // if (root.subscript.type === 'variable' && (root.subscript.value as string).length === 1) {
+    //   return `${this.format(root.base)}_${this.format(root.subscript)}`
+    // }
+
+    // return `${this.format(root.base)}_{${this.format(root.subscript)}}`
   }
 
-  subscript(root: SubscriptNode): string {
-    if (root.subscript.type === 'variable' && (root.subscript.value as string).length === 1) {
-      return `${this.format(root.base)}_${this.format(root.subscript)}`
-    }
-
-    return `${this.format(root.base)}_{${this.format(root.subscript)}}`
-  }
-
-  uni_operator(root: UniOperNode): string {
+  uni_operator(root: UniOperNode) {
     if (root.operator === 'minus') {
-      return `-${this.format(root.value as AST)}`
+      // return `-${this.format(root.value as AST)}`
+      return this.parser.subtract(new this.Symbol(0), this.format(root.value as AST))
     }
 
     return this.format(root.value as AST)
