@@ -7,6 +7,55 @@ describe('latex parser', () => {
     let lexerLatex = new Parser(latex, LatexLexer)
     return lexerLatex.parse()
   }
+    it('parse add & minus expression', () => {
+    const latex = '1-2+3'
+
+    assert.deepStrictEqual(parser(latex), {
+      type: 'operator',
+      operator: 'plus',
+      lhs: {
+        type: 'operator',
+        operator: 'minus',
+        lhs: {
+          type: 'number',
+          value: 1,
+        },
+        rhs: {
+          type: 'number',
+          value: 2,
+        },
+      },
+      rhs: {
+        type: 'number',
+        value: 3,
+      },
+    })
+  })
+
+  it('parse multiply & divide expression', () => {
+    const latex = '1*2/3'
+
+    assert.deepStrictEqual(parser(latex), {
+      type: 'operator',
+      operator: 'multiply',
+      lhs: {
+        type: 'number',
+        value: 1,
+      },
+      rhs: {
+        type: 'operator',
+        operator: 'divide',
+        lhs: {
+          type: 'number',
+          value: 2
+        },
+        rhs: {
+          type: 'number',
+          value: 3
+        }
+      },
+    })
+  })
 
   it('parse simple expression', () => {
     const latex = '\\frac{1}{2} + \\sqrt{2} \\cdot 4'

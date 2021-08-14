@@ -139,7 +139,7 @@ export default class ParserLatex {
       this.peek_token!.type === 'keyword' ||
       this.peek_token!.type === 'bracket'
     ) {
-      return this.operator()
+      return this.operator_plus()
     }
 
     // if (this.peek_token.type === 'bracket' && this.peek_token.open === false) {
@@ -310,13 +310,13 @@ export default class ParserLatex {
     return content
   }
 
-  operator(): AST {
-    // operator : operator_term ((PLUS | MINUS) operator)?
-    debug('operator left')
-    let lhs = this.operator_multiply()
+  operator_plus(): AST {
+    // // operator : operator_term ((PLUS | MINUS) operator)?
+    // debug('operator left')
+    let lhs = this.operator_minus()
     let op = this.peek()
 
-    if (op.type !== 'operator' || (op.value !== 'plus' && op.value !== 'minus')) {
+    if (op.type !== 'operator' || op.value !== 'plus') {
       debug('operator only left side')
       return lhs
     }
@@ -325,7 +325,7 @@ export default class ParserLatex {
     this.next_token()
 
     debug('operator right')
-    let rhs = this.operator()
+    let rhs = this.operator_plus()
 
     return {
       type: 'operator',
@@ -333,6 +333,39 @@ export default class ParserLatex {
       lhs,
       rhs,
     }
+  }
+
+  operator_minus(): AST {
+    // debug('op mul left')
+
+    let lhs = this.operator_multiply()
+
+    return this.operator_minus_prime(lhs)
+  }
+
+  operator_minus_prime(lhs: AST): AST {
+    // debug('op mul left')
+
+    let op = this.peek()
+
+    if (op.type !== 'operator' || op.value !== 'minus') {
+      // debug('term only left side')
+      return lhs
+    } else {
+      // Operator token
+      this.next_token()
+    }
+
+    // debug('op mul right')
+
+    let rhs = this.operator_multiply()
+
+    return this.operator_divide_prime({
+      type: 'operator',
+      operator: op.value,
+      lhs,
+      rhs,
+    })
   }
 
   operator_multiply(): AST {
