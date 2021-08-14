@@ -2,7 +2,7 @@
   "name": "algebra-latex",
   "version": "2.0.3",
   "scripts": {
-    "build": "rimraf ./build && babel src -d build --extensions \".ts,.tsx\" --source-maps inline",
+    "build": "rimraf ./lib && babel src -d lib --extensions \".ts,.tsx\" --source-maps inline",
     "test": "jest ./test --watch",
     "eslint:dry": "eslint . --ext .js,.ts --fix-dry-run",
     "eslint": "eslint . --ext .js,.ts --fix",
@@ -12,7 +12,7 @@
   "repository": "https://github.com/viktorstrate/algebra-latex.git",
   "author": "viktorstrate <viktorstrate@gmail.com>",
   "license": "MIT",
-  "main": "./build/index.js",
+  "main": "./lib/index.js",
   "peerDependencies": {
     "nerdamer": "^1.1.12"
   },
