@@ -4,7 +4,6 @@ import LatexFormatter from './formatters/FormatterLatex'
 import LatexLexer from './lexers/LexerLatex'
 import MathLexer from './lexers/LexerMath'
 import AST from './formatters/AST'
-import nerdamer from 'nerdamer'
 import NerdamerFormatter from './formatters/FormatterNerdamer'
 
 /**
@@ -87,7 +86,7 @@ class AlgebraLatex {
    */
   toNerdamer() {
     if (this.getAst() === '') {
-      return nerdamer('')
+      return ''
     } else {
       return new NerdamerFormatter(this.getAst() as AST).getExpression()
     }

@@ -1,5 +1,4 @@
 import assert from 'assert'
-import nerdamer from 'nerdamer'
 
 // import algebraJS from 'algebra.js'
 // import algebrite from 'algebrite'
@@ -24,7 +23,7 @@ describe('API tests', () => {
   it('parse empty input', () => {
     assert.equal(new AlgebraLatex().parseLatex('').toMath(), '')
     assert.equal(new AlgebraLatex().parseMath('').toLatex(), '')
-    assert.deepEqual(new AlgebraLatex().parseMath('').toNerdamer(), nerdamer(''))
+    assert.deepEqual(new AlgebraLatex().parseMath('').toNerdamer(), '')
   })
 
   it('should parse math expression', () => {

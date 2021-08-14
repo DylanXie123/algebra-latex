@@ -42,7 +42,9 @@ export default class ParserLatex {
     fraction(): AST;
     function(): AST;
     group(): AST;
-    operator(): AST;
+    operator_plus(): AST;
+    operator_minus(): AST;
+    operator_minus_prime(lhs: AST): AST;
     operator_multiply(): AST;
     operator_divide(): AST;
     operator_divide_prime(lhs: AST): AST;
