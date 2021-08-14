@@ -4,6 +4,8 @@ import LatexFormatter from './formatters/FormatterLatex'
 import LatexLexer from './lexers/LexerLatex'
 import MathLexer from './lexers/LexerMath'
 import AST from './formatters/AST'
+import nerdamer from 'nerdamer'
+import NerdamerFormatter from './formatters/FormatterNerdamer'
 
 /**
  * A class for parsing latex math
@@ -76,6 +78,18 @@ class AlgebraLatex {
       return ''
     } else {
       return new LatexFormatter(this.getAst() as AST).format()
+    }
+  }
+
+  /**
+   * Will return a nerdamer object
+   * @return nerdamer object
+   */
+  toNerdamer() {
+    if (this.getAst() === '') {
+      return nerdamer('')
+    } else {
+      return new NerdamerFormatter(this.getAst() as AST).format()
     }
   }
 

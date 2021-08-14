@@ -1,11 +1,11 @@
 import assert from 'assert'
 import nerdamer from 'nerdamer'
 import AST from '../../src/formatters/AST'
-import LatexFormatter from '../../src/formatters/FormatterLatex'
+import NerdamerFormatter from '../../src/formatters/FormatterNerdamer'
 
 describe('formatter latex', () => {
   let getExp = (ast: AST) => {
-    let formatter = new LatexFormatter(ast)
+    let formatter = new NerdamerFormatter(ast)
     return formatter.getExpression()
   }
 
@@ -134,18 +134,18 @@ describe('formatter latex', () => {
   })
 
   it('equation', () => {
-    // const ast: AST = {
-    //   type: 'equation',
-    //   lhs: {
-    //     type: 'variable',
-    //     value: 'y',
-    //   },
-    //   rhs: {
-    //     type: 'number',
-    //     value: 2,
-    //   }
-    // }
-    // assert.deepEqual(getExp(ast), nerdamer('y=2'))
+    const ast: AST = {
+      type: 'equation',
+      lhs: {
+        type: 'variable',
+        value: 'y',
+      },
+      rhs: {
+        type: 'number',
+        value: 2,
+      }
+    }
+    assert.deepEqual(getExp(ast), nerdamer('y=2'))
   })
 
   it('uni-operator', () => {
