@@ -2,7 +2,7 @@
   "name": "algebra-latex",
   "version": "2.0.3",
   "scripts": {
-    "build": "rimraf ./lib && babel src -d lib --extensions \".ts,.tsx\" --source-maps inline",
+    "build": "rimraf ./lib && babel src -d lib --extensions \".ts,.tsx\" --source-maps inline && tsc --emitDeclarationOnly",
     "test": "jest ./test --watch",
     "eslint:dry": "eslint . --ext .js,.ts --fix-dry-run",
     "eslint": "eslint . --ext .js,.ts --fix",
