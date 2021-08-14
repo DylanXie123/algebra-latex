@@ -89,7 +89,7 @@ class AlgebraLatex {
     if (this.getAst() === '') {
       return nerdamer('')
     } else {
-      return new NerdamerFormatter(this.getAst() as AST).format()
+      return new NerdamerFormatter(this.getAst() as AST).getExpression()
     }
   }
 

@@ -1,5 +1,6 @@
 import Parser from './Parser';
 import AST from './formatters/AST';
+import nerdamer from 'nerdamer';
 /**
  * A class for parsing latex math
  */
@@ -31,7 +32,7 @@ declare class AlgebraLatex {
      * Will return a nerdamer object
      * @return nerdamer object
      */
-    toNerdamer(): any;
+    toNerdamer(): nerdamer.Expression;
     /**
      * Wether or not the object is an equation or an expression
      * @return Boolean true if expression
