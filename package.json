@@ -12,6 +12,7 @@
   "repository": "https://github.com/viktorstrate/algebra-latex.git",
   "author": "viktorstrate <viktorstrate@gmail.com>",
   "license": "MIT",
+  "main": "./build/index.js",
   "peerDependencies": {
     "nerdamer": "^1.1.12"
   },
