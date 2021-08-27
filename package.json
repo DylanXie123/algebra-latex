@@ -1,6 +1,6 @@
 {
   "name": "algebra-latex",
-  "version": "2.0.3",
+  "version": "0.1.1",
   "scripts": {
     "build": "rimraf ./lib && babel src -d lib --extensions \".ts,.tsx\" --source-maps inline && tsc --emitDeclarationOnly",
     "test": "jest ./test --watch",
