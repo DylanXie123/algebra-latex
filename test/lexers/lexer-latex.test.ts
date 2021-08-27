@@ -184,6 +184,23 @@ describe('latex lexer', () => {
     assert.deepStrictEqual(parse(latex), expected)
   })
 
+  it('parse mathrm', () => {
+    const latex = '\\mathrm{cos}2'
+
+    const expected = [
+      {
+        type: 'keyword',
+        value: 'cos',
+      },
+      {
+        type: 'number',
+        value: 2,
+      },
+    ]
+
+    assert.deepStrictEqual(parse(latex), expected)
+  })
+
   describe('error handling', () => {
     it('handle bracket error correctly', () => {
       const latex = '\\left\n { \\right\\Alpha'

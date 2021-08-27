@@ -153,6 +153,14 @@ export default class LatexLexer extends Lexer {
       return bracket
     }
 
+    if (variable.value === 'mathrm') {
+      this.eat('{')
+      let func = this.variable()
+      this.eat('}')
+
+      return { type: 'keyword', value: func.value }
+    }
+
     if (greekLetters.map(x => x.name).includes((variable.value as string).toLowerCase())) {
       return { type: 'variable', value: variable.value }
     }

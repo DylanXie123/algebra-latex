@@ -43,6 +43,7 @@ describe('API tests', () => {
     assert.equal(result, '\\frac{1}{\\sqrt{2}}')
   })
 
+
   // describe('algebra.js', () => {
   //   const algebraJSEquation = algebraEquation.toAlgebra(algebraJS)
   //   const algebraJSExpression = algebraExpression.toAlgebra(algebraJS)
